@@ -10,8 +10,6 @@ This project was generated with a template that includes Kotlin application laun
 
 ## timeline
 
-
-
 ### 2025-03-02 14:13:12
 
 - [ ] 快速阅读一下 [Quillraven/SimpleKtxGame](https://github.com/Quillraven/SimpleKtxGame)
@@ -19,8 +17,6 @@ This project was generated with a template that includes Kotlin application laun
 ### 2025-03-02 13:57:02
 
 参考这个项目 [sample](https://github.com/libktx/ktx-sample-project)，基本结构如此：
-
-
 
 ```kotlin
 class Main : KtxGame<KtxScreen>() {
@@ -33,13 +29,9 @@ class Main : KtxGame<KtxScreen>() {
 }
 ```
 
-
-
 ### 2025-03-02 11:20:49
 
 从 [KTX](https://libktx.github.io/#dependencies-section) 复制在 `core/build/gradle` 下面添加依赖
-
-
 
 ```groovy
 dependencies {
@@ -47,7 +39,7 @@ dependencies {
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
   // !!! ktx-app:
   api group: 'io.github.libktx', name: 'ktx-app', version: '1.13.1-rc1'
-  
+
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
@@ -56,15 +48,11 @@ dependencies {
 
 根据 gdx-liftoff自带生成发现，可以在 gradle.properties 里面定义变量
 
-
-
 ```properties
 ktxVersion=1.13.1-rc1
 ```
 
 然后再改为
-
-
 
 ```groovy
 dependencies {
@@ -83,8 +71,6 @@ dependencies {
 
 <img title="" src="docs/assets/2025-03-02-14-03-55-image.png" alt="" data-align="center" width="332">
 
-
-
 ### 2025-03-01 21:40:32
 
 项目来源 [A Simple Game - libGDX](https://libgdx.com/wiki/start/a-simple-game)
@@ -97,7 +83,7 @@ dependencies {
 
 运行桌面版的方式如下
 
-<img title="" src="docs/assets/2025-03-01-21-49-56-image.png" alt="" width="287" data-align="center">~~~~
+<img title="" src="docs/assets/2025-03-01-21-49-56-image.png" alt="" width="254" data-align="center">
 
 ## Platforms
 
