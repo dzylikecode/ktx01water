@@ -10,6 +10,89 @@ This project was generated with a template that includes Kotlin application laun
 
 ## timeline
 
+### 2025-03-14 20:26:30
+
+采用 inject 来管理全局变量，然后给个变量分散在各自的地方初始化，比如 assetManager，我就放到 loadingScreen 里面
+
+```kotlin
+class Loading(
+    private val context: Context,
+    private val _onLoaded: (KtxScreen) -> Unit = {},
+) : KtxScreen {
+    init {
+        context.register {
+            bindSingleton(SpriteBatch())
+            bindSingleton(BitmapFont())
+            bindSingleton(AssetStorage())
+        }
+        batch = context.inject()
+        font = context.inject()
+
+        assetStorage = context.inject()
+    }
+}
+```
+
+有些耦合，但是无所谓，毕竟loading确实负责加载资源，SpriteBatch和BitmapFont倒是可以放到一个更高的作用域去
+
+### 2025-03-13 22:37:51
+
+```kotlin
+class Screen : KtxScreen {
+    val batch = SpriteBatch()
+
+    override fun render(delta: Float) {
+        // !!! 不加这个就dispose的话会错误
+        if (disposed) return
+        batch.use(camera) {
+            font.draw(it, "Loading...", 100f, 100f)
+        }
+    }
+
+    override fun dispose() {
+        disposed = true
+        batch.dispose()
+        super.dispose()
+    }
+}
+
+removeScreen<Screen>()
+it.dispose()
+
+```
+
+在使用dispose的时候，可能render还在起作用，会导致调用batch失效，一个办法是使用标志判断，还有一个是提升batch的作用域，在game上就不会这样
+
+### 2025-03-13 20:40:52
+
+这个[教程](https://github.com/nanshaws/LibgdxTutorial)挺不错的
+
+### 2025-03-13 20:29:05
+
+了解到kotlin是通过init这个来在构造函数的时候执行代码，其他函数是有fun作为前缀表示成员方法
+
+
+
+### 2025-03-13 11:20:06
+
+添加[资源](https://libgdx.com/wiki/start/a-simple-game#loading-assets)，采用异步加载
+
+### 2025-03-13 10:32:38
+
+理解了一些 dependency inject 技术，和依赖接口差不多。之所以有 ktx-inject 是为了接口简单，比如这样
+
+
+
+```kotlin
+GameScreen(inject(), inject(), inject(), inject(), inject())
+```
+
+这样这里都是inject，具体依赖的地方来更改
+
+### 2025-03-11 21:03:10
+
+进度推进太慢了，需要花点时间思考
+
 ### 2025-03-02 14:13:12
 
 - [ ] 快速阅读一下 [Quillraven/SimpleKtxGame](https://github.com/Quillraven/SimpleKtxGame)
@@ -59,7 +142,7 @@ dependencies {
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
   // !!! ktx-app:
-  api group: 'io.github.libktx', name: 'ktx-app', version: '$ktxVersion'
+  api group: 'io.github.libktx', name: 'ktx-app', version: ktxVersion
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
@@ -70,6 +153,14 @@ dependencies {
 运行的时候发现要重启项目才会生效，后面发现可以点击重构
 
 <img title="" src="docs/assets/2025-03-02-14-03-55-image.png" alt="" data-align="center" width="332">
+
+也可以在这搜索构建
+
+
+
+<img title="" src="docs/assets/2025-03-13-10-38-21-image.png" alt="" width="494" data-align="center">
+
+
 
 ### 2025-03-01 21:40:32
 

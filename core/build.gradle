@@ -5,9 +5,17 @@ dependencies {
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
   api "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
   // ktx-app:
-  api group: 'io.github.libktx', name: 'ktx-app', version: "$ktxVersion"
+  api group: 'io.github.libktx', name: 'ktx-app', version: ktxVersion
 // ktx-async:
-  api group: 'io.github.libktx', name: 'ktx-async', version: "$ktxVersion"
+  api group: 'io.github.libktx', name: 'ktx-async', version: ktxVersion
+// ktx-inject:
+  api group: 'io.github.libktx', name: 'ktx-inject', version: ktxVersion
+// ktx-assets-async:
+  api group: 'io.github.libktx', name: 'ktx-assets-async', version: ktxVersion
+// ktx-graphics:
+  api group: 'io.github.libktx', name: 'ktx-graphics', version: ktxVersion
+// ktx-math:
+  api group: 'io.github.libktx', name: 'ktx-math', version: ktxVersion
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
