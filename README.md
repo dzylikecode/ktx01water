@@ -10,6 +10,88 @@ This project was generated with a template that includes Kotlin application laun
 
 ## timeline
 
+### 2025-03-17 15:28:19
+
+一开始为了剥离input，采用了Processor的方法，结构发现 keydown 只能捕获一次按下，连续按下不会触发，然后类似的采用了 keyTyped 也不行，比较卡顿
+
+```kotlin
+class Game(
+): KtxScreen {
+    init {
+        Gdx.input.inputProcessor = InputLogic()
+    }
+
+    inner class InputLogic : KtxInputAdapter {
+        override fun keyDown(keycode: Int): Boolean {
+            val delta = Gdx.graphics.deltaTime
+            when (keycode) {
+                Input.Keys.A -> bucket.translateX(-speed * delta)
+                Input.Keys.D -> bucket.translateX(speed * delta)
+            }
+            return true
+        }
+    }
+}
+```
+
+丝滑的效果还得是放到render里面，然后用一个变量来控制
+
+```kotlin
+class Game(
+): KtxScreen {
+    override fun render(delta: Float) {
+        input()
+        batch.use(camera) {
+            it.draw(background, 0f, 0f)
+            bucket.draw(it)
+        }
+    }
+
+    fun input() {
+        val delta = Gdx.graphics.deltaTime
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            bucket.translateX(-speed * delta)
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            bucket.translateX(speed * delta)
+        }
+    }
+}
+
+```
+
+
+### 2025-03-14 23:47:44
+
+了解到batch是一个接口，spritebatch 是一个实现，此外还有 PolygonSpriteBatch
+
+了解了viewport，相当于单独管理camera的[viewport](https://libgdx.com/wiki/graphics/viewports)，处理窗口拉伸这些问题：
+
+[difference between Viewport and camera in Libgdx?](https://stackoverflow.com/questions/40059360/difference-between-viewport-and-camera-in-libgdx)
+
+官网的[视频](https://libgdx.com/wiki/graphics/viewports)也不错
+
+例子：
+
+```kotlin
+
+class Screen(): KtxScreen {
+    val camera = OrthographicCamera()
+    val viewport = FitViewport(640f, 480f, camera) // 管理这个 camera
+
+    override fun resize(width: Int, height: Int) {
+        viewport.update(width, height, true) // 这里本身就会 apply
+    }
+
+    override fun render(delta: Float) {
+        batch.use(camera) {
+            it.draw(background, 0f, 0f)
+        }
+    }
+}
+
+```
+
 ### 2025-03-14 20:26:30
 
 采用 inject 来管理全局变量，然后给个变量分散在各自的地方初始化，比如 assetManager，我就放到 loadingScreen 里面
